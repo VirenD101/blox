@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class BlockMovement : MonoBehaviour {
     public float rollSpeed = 500;
@@ -182,6 +183,15 @@ public class BlockMovement : MonoBehaviour {
 
     void TriggerWin() {
         Debug.Log("LEVEL COMPLETE!");
+        
+        int nextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
+
+        if (nextSceneIndex < SceneManager.sceneCountInBuildSettings) {
+            SceneManager.LoadScene(nextSceneIndex);
+        } else {
+            Debug.Log("All game levels cleared! Returning to main menu console.");
+            SceneManager.LoadScene(0);
+        }
     }
 
     void ResetToStart() {
