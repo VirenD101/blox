@@ -10,10 +10,10 @@ public class BlockMovement : MonoBehaviour {
     void Update() {
         if (isRolling) return;
 
-        if (Keyboard.current.wKey.isPressed) Assemble(Vector3.forward);
-        else if (Keyboard.current.sKey.isPressed) Assemble(Vector3.back);
-        else if (Keyboard.current.aKey.isPressed) Assemble(Vector3.left);
-        else if (Keyboard.current.dKey.isPressed) Assemble(Vector3.right);
+        if (Keyboard.current.wKey.isPressed || Keyboard.current.upArrowKey.isPressed) Assemble(Vector3.forward);
+        else if (Keyboard.current.sKey.isPressed || Keyboard.current.downArrowKey.isPressed) Assemble(Vector3.back);
+        else if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed) Assemble(Vector3.left);
+        else if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed) Assemble(Vector3.right);
     }
 
     void Assemble(Vector3 dir) {
@@ -64,6 +64,10 @@ public class BlockMovement : MonoBehaviour {
 
         // Snap coordinates
         SnapToGrid();
+
+        if (LevelManager.Instance != null) {
+            LevelManager.Instance.RecordMove();
+        }
         
         isRolling = false;
     }
