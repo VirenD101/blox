@@ -2,23 +2,32 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainMenuController : MonoBehaviour {
+
+    public GameObject mainMenuPanel;
+    public GameObject creditsPanel;
     
-    [Header("Scene Configuration")]
-    [Tooltip("The exact name of your first playable level scene.")]
     [SerializeField] private string firstLevelName = "Level1";
 
     public void PlayGame() {
-        // Option A: Loads by scene string identifier name
         SceneManager.LoadScene(firstLevelName);
+    }
 
-        // Option B (Alternative): Loads the very next scene index in your Build Settings map
-        // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    public void OpenCredits()
+    {
+        // Hide the main menu buttons and show your credits
+        mainMenuPanel.SetActive(false);
+        creditsPanel.SetActive(true);
+    }
+
+    public void CloseCredits()
+    {
+        // Hide the credits and bring back the main menu buttons
+        mainMenuPanel.SetActive(true);
+        creditsPanel.SetActive(false);
     }
 
     public void QuitGame() {
         Debug.Log("Application closed successfully.");
-        
-        // Closes the built standalone execution application (.exe / .app)
         Application.Quit();
     }
 }
