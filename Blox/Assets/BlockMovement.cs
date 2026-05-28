@@ -3,9 +3,16 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
+
+
 public class BlockMovement : MonoBehaviour {
     public float rollSpeed = 500;
     private bool isRolling = false;
+
+    [Header("Audio Setup")]
+    [SerializeField] private AudioSource playerAudioSource;
+    public AudioClip normalClunkSound;
+    public AudioClip goalClunkSound;
 
     void Update() {
         if (isRolling) return;
@@ -108,6 +115,10 @@ public class BlockMovement : MonoBehaviour {
         rot.z = Mathf.Round(rot.z / 90) * 90;
         transform.rotation = Quaternion.Euler(rot);
 
+        if (playerAudioSource != null && normalClunkSound != null) {
+            playerAudioSource.PlayOneShot(normalClunkSound);
+        }
+
         CheckFloor();
     }
 
@@ -173,6 +184,10 @@ public class BlockMovement : MonoBehaviour {
             }
         }
 
+        if (AudioManager.Instance != null) {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.fallSound);
+        }
+
         // GRAVITY LOGIC when falling
         float elapsed = 0;
         while (elapsed < 1.2f) {
@@ -186,8 +201,19 @@ public class BlockMovement : MonoBehaviour {
     }
 
     void TriggerWin() {
+        if (playerAudioSource != null && goalClunkSound != null) {
+            playerAudioSource.PlayOneShot(goalClunkSound);
+        }
+
         Debug.Log("LEVEL COMPLETE!");
         
+        StartCoroutine(LoadNextLevelWithDelay(0.5f));
+    }
+
+    private IEnumerator LoadNextLevelWithDelay(float delay) {
+        yield return new WaitForSeconds(delay);
+
+        // Now safely load the next chronological level index
         int nextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
 
         if (nextSceneIndex < SceneManager.sceneCountInBuildSettings) {
